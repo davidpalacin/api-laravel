@@ -125,4 +125,27 @@ class TaskController extends Controller
             ], 500);
         }
     }
+
+    // Actualizar una tarea
+    public function updateTask(Request $request, $id)
+    {
+        try {
+            //Encontramos la tarea y actualizar datos
+            $taskToUpdate = Task::query()->find($id);
+            $taskToUpdate -> title = $request->input('title');
+            $taskToUpdate -> description = $request->input('description');
+
+            //Devolvemos el resultado
+            return response([
+                "success" => true,
+                "message" => "Task updated successfully",
+                "task" => $taskToUpdate
+            ]);
+        } catch (\Throwable $th) {
+            return response([
+                "success" => false,
+                "message" => "Failed to update " . $th->getMessage(),
+            ]);
+        }
+    }
 }

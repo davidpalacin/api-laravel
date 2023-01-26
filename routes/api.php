@@ -30,9 +30,7 @@ Route::get("tasks/{id}", [TaskController::class, 'getTaskById']);
 // Crear tarea:
 Route::post("tasks", [TaskController::class, 'createTask']);
 
-Route::put("tasks", function () {
-    return "actualizar tarea";
-});
+Route::put("tasks", [TaskController::class, 'updateTask']);
 
 // Eliminar tarea por id
 Route::delete("tasks/{id}", [TaskController::class, 'deleteTaskById']);
