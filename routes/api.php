@@ -34,7 +34,6 @@ Route::put("tasks", function () {
     return "actualizar tarea";
 });
 
-Route::delete("tasks/{id}", function ($id) {
-    return "Eliminar tarea $id";
-});
+// Eliminar tarea por id
+Route::delete("tasks/{id}", [TaskController::class, 'deleteTaskById']);
 

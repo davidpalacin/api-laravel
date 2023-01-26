@@ -5,12 +5,26 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TaskController extends Controller
 {
     public function createTask(Request $request)
     {
         try {
+            // Crear una validación para requerir los campos:
+            $validator = Validator::make($request->all(), [
+                'title' => 'required',
+                'description' => 'required'
+            ]);
+
+            if($validator->fails()){
+                return response([
+                    "success" => false,
+                    "message" => $validator->messages()
+                ], 400);
+            }
+
             // Recibimos del body la información
             $title = $request->input('title');
             $description = $request->input('description');
@@ -65,7 +79,15 @@ class TaskController extends Controller
             // funcion eloquent busca la tarea y devolver json
             $task = Task::where('id', $id)
                 ->get();
-                
+
+            /* if(!$task) {
+                return response([
+                    "success" => true,
+                    "message" => "Task does not exist",
+                    "data" => $task
+                ], 404);
+            } */
+
             return response([
                 "success" => true,
                 "message" => "Task retrieved successfully",
@@ -78,6 +100,28 @@ class TaskController extends Controller
             return response([
                 "success" => false,
                 "message" => "Cannot find task: " . $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function deleteTaskById($id)
+    {
+        try {
+            $taskToDelete = Task::query()->find($id);
+            $taskToDelete->delete();
+            
+            return response([
+                "success" => true,
+                "message" => "Task deleted successfully",
+                "data" => [
+                    $taskToDelete
+                ]
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response([
+                "success" => false,
+                "message" => "Cannot delete task " . $th->getMessage(),
             ], 500);
         }
     }
