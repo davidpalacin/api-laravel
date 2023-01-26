@@ -65,6 +65,7 @@ class TaskController extends Controller
             // funcion eloquent busca la tarea y devolver json
             $task = Task::where('id', $id)
                 ->get();
+                
             return response([
                 "success" => true,
                 "message" => "Task retrieved successfully",
