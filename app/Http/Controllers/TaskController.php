@@ -37,4 +37,47 @@ class TaskController extends Controller
             ], 500);
         }
     }
+
+    public function getAllTasks()
+    {
+        try {
+            $tasks = Task::all();
+            return response([
+                "success" => true,
+                "message" => "Tasks retrieved successfully",
+                "data" => [
+                    "task" => $tasks
+                ]
+            ], 200);
+        } catch (\Throwable $th) {
+            // Controlar el error
+            return response([
+                "success" => false,
+                "message" => "Cannot get tasks: " . $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    // devolver tarea por id
+    public function getTaskById($id)
+    {
+        try {
+            // funcion eloquent busca la tarea y devolver json
+            $task = Task::where('id', $id)
+                ->get();
+            return response([
+                "success" => true,
+                "message" => "Task retrieved successfully",
+                "data" => [
+                    "task" => $task
+                ]
+            ], 200);
+        } catch (\Throwable $th) {
+            // Controlar el error
+            return response([
+                "success" => false,
+                "message" => "Cannot find task: " . $th->getMessage(),
+            ], 500);
+        }
+    }
 }
